@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Menu from "./components/Menu.jsx";
-import AddListing from "./components/AddListing";
+import AddListing from "./components/AddListing.jsx";
+import Map from "./components/Map.jsx"
+import MapComponent from "./components/Map.jsx";
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,7 +23,7 @@ const App = () => {
 
       {/* Map Placeholder */}
       <div className="flex-grow flex items-center justify-center bg-blue-500 text-white text-xl">
-        MAP
+        <MapComponent />
       </div>
 
       {/* Menu Component */}
