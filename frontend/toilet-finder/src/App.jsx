@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Menu from "./components/Menu.jsx";
 import AddListing from "./components/AddListing.jsx";
-import Map from "./components/Map.jsx"
 import MapComponent from "./components/Map.jsx";
 
 const App = () => {
