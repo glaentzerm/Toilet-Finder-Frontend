@@ -1,25 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
+const BRUSSELS_API_URL =
+    "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/toilettes_publiques_vbx/records?limit=100";
+
+const toiletIcon = L.icon({
+    iconUrl: 'https://img.icons8.com/?size=100&id=MqgCEBAJgyEc&format=png&color=000000',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+});
+
 const MapComponent = () => {
+    const [toilets, setToilets] = useState([]);
+
+    useEffect(() => {
+        fetch(BRUSSELS_API_URL)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data && data.results) {
+                    setToilets(data.results);
+                }
+            })
+            .catch((error) => console.error("Error fetching toilet data:", error));
+    }, []);
+
     return (
-        <div className="w-full h-full"> {/* Ensures Map has a height */}
+        <div className="w-full h-full">
             <MapContainer
-                center={[51.505, -0.09]}
+                center={[50.8503, 4.3517]}
                 zoom={13}
-                scrollWheelZoom={false}
-                className="h-full w-full" // Tailwind ensures the map fills its container
+                scrollWheelZoom={true}
+                className="h-full w-full"
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={[51.505, -0.09]}>
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
+                {toilets.map((toilet, index) =>
+                    toilet.geo_point_2d ? (
+                        <Marker
+                            key={index}
+                            position={[toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]}
+                            icon={toiletIcon}
+                        >
+                            <Popup>
+                                <strong>{toilet.nom || "Public Toilet"}</strong><br />
+                                {toilet.location || "No address available"}
+                            </Popup>
+                        </Marker>
+                    ) : null
+                )}
+
             </MapContainer>
         </div>
     );
