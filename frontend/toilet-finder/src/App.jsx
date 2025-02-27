@@ -21,7 +21,7 @@ const App = () => {
       </div>
 
       {/* Map Placeholder */}
-      <div className="flex-grow flex items-center justify-center bg-blue-500 text-white text-xl">
+      <div className="flex-grow flex items-center justify-center text-white text-xl">
         <MapComponent />
       </div>
 
