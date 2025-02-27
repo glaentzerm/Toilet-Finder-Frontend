@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet"; // ✅ Import L from leaflet
 import "leaflet/dist/leaflet.css";
 
 const BRUSSELS_API_URL =
     "https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/toilettes_publiques_vbx/records?limit=100";
 
 const toiletIcon = L.icon({
-    iconUrl: 'https://img.icons8.com/?size=100&id=MqgCEBAJgyEc&format=png&color=000000',
+    iconUrl: "https://img.icons8.com/?size=100&id=MqgCEBAJgyEc&format=png&color=000000",
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
@@ -27,12 +28,13 @@ const MapComponent = () => {
     }, []);
 
     return (
-        <div className="w-full h-full">
+        // ✅ CHANGED: Adjusted the container to set a fixed height so the map doesn't take up the full screen
+        <div className="w-full" style={{ height: "50vh" }}> {/* Adjust height as needed */}
             <MapContainer
                 center={[50.8503, 4.3517]}
                 zoom={13}
                 scrollWheelZoom={true}
-                className="h-full w-full"
+                className="w-full h-full rounded-lg shadow-md" // ✅ CHANGED: Ensuring proper styling
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -46,13 +48,13 @@ const MapComponent = () => {
                             icon={toiletIcon}
                         >
                             <Popup>
-                                <strong>{toilet.nom || "Public Toilet"}</strong><br />
+                                <strong>{toilet.nom || "Public Toilet"}</strong>
+                                <br />
                                 {toilet.location || "No address available"}
                             </Popup>
                         </Marker>
                     ) : null
                 )}
-
             </MapContainer>
         </div>
     );
