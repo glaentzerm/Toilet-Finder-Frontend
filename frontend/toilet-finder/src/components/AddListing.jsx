@@ -17,7 +17,6 @@ const AddListing = ({ isOpen, onClose }) => {
           <h2 className="text-lg font-semibold">Add Listing</h2>
         </div>
 
-        {/* Rating System */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Rate this toilet</label>
           <div className="flex space-x-2 mt-2">
@@ -27,7 +26,6 @@ const AddListing = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Location Input */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Location</label>
           <input
@@ -37,7 +35,6 @@ const AddListing = ({ isOpen, onClose }) => {
           />
         </div>
 
-        {/* Details */}
         <div className="mb-4">
           <label className="block text-sm font-medium">Details</label>
           <div className="grid grid-cols-2 gap-2 mt-2">
@@ -46,7 +43,6 @@ const AddListing = ({ isOpen, onClose }) => {
           </div>
         </div>
 
-        {/* Confirm Button */}
         <button className="w-full py-2 bg-blue-500 text-white rounded-lg">Confirm</button>
       </div>
     </div>
