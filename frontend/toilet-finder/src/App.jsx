@@ -11,14 +11,14 @@ const App = () => {
       {/* Phone Frame */}
       <div className="relative w-[375px] h-[812px] bg-white rounded-[40px] shadow-2xl border border-gray-300 overflow-hidden">
         
-        {/*Notch */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-black rounded-b-lg"></div>
+        {/* Notch */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-black rounded-b-lg"></div>
 
         {/* App Content */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full relative">
           
           {/* Search & Icons */}
-          <div className="pb-4">
+          <div className="pb-4 z-10">
             {/* Search Bar */}
             <div className="p-8 flex justify-center">
               <div className="relative w-full max-w-xs">
@@ -31,7 +31,7 @@ const App = () => {
               </div>
             </div>
 
-            {/*Scrollable Filter Icons */}
+            {/* Scrollable Filter Icons */}
             <div className="flex overflow-x-auto px-4 space-x-4 py-2">
               {[
                 "🧍‍♂️", "🧍‍♀️", "🚻", "♿", "🚼", "🧑‍🧑‍🧒‍🧒", "💰", "🆓"
@@ -43,17 +43,21 @@ const App = () => {
             </div>
           </div>
 
-          {/* Map Section with Extra Padding */}
-          <div className="flex-grow mt-6">
+          {/* Map Section */}
+          <div className="flex-grow mt-6 relative z-0">
             <MapComponent />
           </div>
 
           {/* Menu Component */}
-          <Menu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+          {isMenuOpen && (
+            <div className="absolute inset-0 z-20">
+              <Menu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+            </div>
+          )}
 
           {/* Bottom Navigation */}
-          <div className="bg-[#f4e2b3] p-4 flex justify-around items-center shadow-md border-t border-gray-300 rounded-t-3xl">
-          <button
+          <div className="bg-[#f4e2b3] p-4 flex justify-around items-center shadow-md border-t border-gray-300 rounded-t-3xl z-10">
+            <button
               className="flex flex-col items-center text-gray-700 hover:text-black"
               onClick={() => setIsMenuOpen(true)}
             >
