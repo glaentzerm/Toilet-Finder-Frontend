@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet"; // ✅ Import L from leaflet
+import L from "leaflet"; 
 import "leaflet/dist/leaflet.css";
 
 const BRUSSELS_API_URL =
@@ -28,13 +28,12 @@ const MapComponent = () => {
     }, []);
 
     return (
-        // ✅ CHANGED: Adjusted the container to set a fixed height so the map doesn't take up the full screen
-        <div className="w-full" style={{ height: "50vh" }}> {/* Adjust height as needed */}
+        <div className="w-full" style={{ height: "50vh" }}> 
             <MapContainer
                 center={[50.8503, 4.3517]}
                 zoom={13}
                 scrollWheelZoom={true}
-                className="w-full h-full rounded-lg shadow-md" // ✅ CHANGED: Ensuring proper styling
+                className="w-full h-full rounded-lg shadow-md" 
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
