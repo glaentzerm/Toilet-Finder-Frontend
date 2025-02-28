@@ -34,7 +34,7 @@ const App = () => {
             {/*Scrollable Filter Icons */}
             <div className="flex overflow-x-auto px-4 space-x-4 py-2">
               {[
-                "♂️", "♀️", "🚻", "♿", "🚼", "🧑‍🤝‍🧑", "💰", "🔑"
+                "🧍‍♂️", "🧍‍♀️", "🚻", "♿", "🚼", "🧑‍🧑‍🧒‍🧒", "💰", "🆓"
               ].map((icon, index) => (
                 <div key={index} className="flex-shrink-0 bg-[#f4e2b3] p-4 rounded-full shadow-md border border-gray-300 text-3xl">
                   {icon}
@@ -64,7 +64,7 @@ const App = () => {
               <span className="text-3xl">＋</span>
             </button>
             <button className="flex flex-col cursor-pointer items-center text-gray-700 hover:text-black">
-              <span className="text-3xl">👤</span>
+              <span className="text-3xl">💩</span>
               <span className="text-base">Account</span>
             </button>
           </div>
