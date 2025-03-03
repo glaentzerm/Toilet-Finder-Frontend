@@ -13,7 +13,7 @@ const toiletIcon = L.icon({
   popupAnchor: [0, -32],
 });
 
-const MapComponent = () => {
+const MapComponent = ({ onToiletSelect }) => {
   const [toilets, setToilets] = useState([]);
 
   useEffect(() => {
@@ -46,6 +46,20 @@ const MapComponent = () => {
               key={index}
               position={[toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]}
               icon={toiletIcon}
+              eventHandlers={{
+                click: () => {
+                  const toiletData = {
+                    address: toilet.location || "No address available",
+                    walkTime: Math.floor(Math.random() * 15) + 1, // Random walk time
+                    filters: [
+                      toilet.acces_pmr ? "♿ Accessible" : "",
+                      toilet.paying === "YES" ? "💰 Paid" : "🆓 Free",
+                      toilet.opening_hours === "24/7" ? "🟢 Open Now" : "",
+                    ].filter(Boolean),
+                  };
+                  onToiletSelect(toiletData);
+                },
+              }}
             >
               <Popup>
                 <strong>{toilet.nom || "Public Toilet"}</strong>
