@@ -5,6 +5,7 @@ import MapComponent from "./components/Map.jsx";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register.jsx";
 import FilterButton from "./components/FilterButton.jsx";
+import SearchBar from "./components/SearchBar.jsx";
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +13,7 @@ const App = () => {
   const [activeFilter, setActiveFilter] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const filters = [
     { icon: "♿", name: "Accessible" },
@@ -24,27 +26,17 @@ const App = () => {
     <div className="flex justify-center items-center h-screen bg-gray-200">
       {/* Phone Frame */}
       <div className="relative w-[375px] h-[812px] bg-white rounded-[40px] shadow-2xl border border-gray-300 overflow-hidden">
-        
+
         {/* Notch */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-4 bg-black rounded-b-lg"></div>
 
         {/* App Content */}
         <div className="flex flex-col h-full relative">
-          
+
           {/* Search & Icons */}
           <div className="pb-4 z-10">
             {/* Search Bar */}
-            <div className="p-8 flex justify-center">
-              <div className="relative w-full max-w-xs">
-                <input
-                  type="text"
-                  placeholder="Find a toilet"
-                  className="px-4 py-3 pl-10 rounded-full w-full border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#1572a1] text-lg bg-[#9ad0ec]"
-                />
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">🔍</span>
-              </div>
-            </div>
-
+            <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
             {/* Clickable Filter Icons */}
             <div className="flex justify-center px-4 space-x-4 py-2">
               {filters.map((filter, index) => (
@@ -60,11 +52,14 @@ const App = () => {
 
           {/* Map Section */}
           <div className="flex-grow mt-6 relative z-0">
-            <MapComponent onToiletSelect={setSelectedToilet} activeFilter={activeFilter} />
+            <MapComponent
+              onToiletSelect={setSelectedToilet}
+              activeFilter={activeFilter}
+              searchQuery={searchQuery} />
           </div>
 
           {/* Sliding Up Card with Smooth Transition */}
-          <div 
+          <div
             className={`absolute bottom-0 left-0 w-full bg-white p-4 border-t border-gray-300 shadow-lg rounded-t-3xl transition-transform transform ${selectedToilet ? "translate-y-0" : "translate-y-full"} duration-300 ease-in-out`}
           >
             {selectedToilet && (
@@ -79,7 +74,7 @@ const App = () => {
                     <span key={index} className="bg-gray-200 px-2 py-1 rounded-md">{filter}</span>
                   ))}
                 </div>
-                <button 
+                <button
                   className="mt-4 w-full bg-red-500 text-white p-2 rounded-md"
                   onClick={() => setSelectedToilet(null)}
                 >
@@ -117,17 +112,17 @@ const App = () => {
       </div>
 
       {isModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-white w-[90%] max-w-[375px] p-6 rounded-2xl shadow-lg relative">
-      <button className="text-gray-700 text-xl absolute top-4 right-6 cursor-pointer" onClick={() => setIsModalOpen(false)}>✖</button>
-      {isRegistering ? (
-        <Register onClose={() => setIsModalOpen(false)} onLogin={() => setIsRegistering(false)} />
-      ) : (
-        <Login onClose={() => setIsModalOpen(false)} onRegister={() => setIsRegistering(true)} />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white w-[90%] max-w-[375px] p-6 rounded-2xl shadow-lg relative">
+            <button className="text-gray-700 text-xl absolute top-4 right-6 cursor-pointer" onClick={() => setIsModalOpen(false)}>✖</button>
+            {isRegistering ? (
+              <Register onClose={() => setIsModalOpen(false)} onLogin={() => setIsRegistering(false)} />
+            ) : (
+              <Login onClose={() => setIsModalOpen(false)} onRegister={() => setIsRegistering(true)} />
+            )}
+          </div>
+        </div>
       )}
-    </div>
-  </div>
-)}
 
     </div>
   );
