@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -11,6 +11,19 @@ const toiletIcon = L.icon({
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
 });
+
+const MapViewUpdater = ({ toilets }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (toilets.length === 0) return;
+
+    const bounds = L.latLngBounds(toilets.map(toilet => [toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]));
+    map.fitBounds(bounds, { padding: [50, 50] });
+  }, [toilets, map]);
+
+  return null;
+};
 
 const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
   const [toilets, setToilets] = useState([]);
@@ -28,7 +41,6 @@ const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
       })
       .catch((error) => console.error("Error fetching toilet data:", error));
   }, []);
-
 
   useEffect(() => {
     console.log("Search query:", searchQuery);
@@ -74,12 +86,15 @@ const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* ✅ Update map view when search results change */}
+        <MapViewUpdater toilets={filteredToilets} />
+
         {filteredToilets.length > 0 ? (
           filteredToilets.map((toilet, index) =>
             toilet.geo_point_2d ? (
               <Marker
                 key={index}
-                position={[toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]}
+                position={[toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]} // ✅ Use correct coordinates
                 icon={toiletIcon}
                 eventHandlers={{
                   click: () => {
