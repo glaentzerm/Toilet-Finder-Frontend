@@ -15,12 +15,22 @@ const App = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [activeFilters, setActiveFilters] = useState([]);
+
   const filters = [
     { icon: "♿", name: "Accessible" },
     { icon: "💰", name: "Paid" },
     { icon: "🆓", name: "Free" },
     { icon: "🟢", name: "Open Now" },
   ];
+
+  const toggleFilter = (filterName) => {
+    setActiveFilters((prevFilters) =>
+      prevFilters.includes(filterName)
+        ? prevFilters.filter((f) => f !== filterName)
+        : [...prevFilters, filterName]
+    );
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-200">
@@ -43,9 +53,8 @@ const App = () => {
                 <FilterButton
                   key={index}
                   filter={filter}
-                  isActive={activeFilter === filter.name}
-                  onClick={() => setActiveFilter(activeFilter === filter.name ? null : filter.name)}
-                />
+                  isActive={activeFilters === filter.name}
+                  onClick={toggleFilter} />
               ))}
             </div>
           </div>
@@ -54,7 +63,7 @@ const App = () => {
           <div className="flex-grow mt-6 relative z-0">
             <MapComponent
               onToiletSelect={setSelectedToilet}
-              activeFilter={activeFilter}
+              activeFilters={activeFilters}
               searchQuery={searchQuery} />
           </div>
 

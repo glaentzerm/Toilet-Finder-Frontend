@@ -25,7 +25,7 @@ const MapViewUpdater = ({ toilets }) => {
   return null;
 };
 
-const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
+const MapComponent = ({ onToiletSelect, activeFilters, searchQuery }) => {
   const [toilets, setToilets] = useState([]);
   const [filteredToilets, setFilteredToilets] = useState([]);
 
@@ -43,34 +43,63 @@ const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
   }, []);
 
   useEffect(() => {
-    console.log("Search query:", searchQuery);
-
-    if (!searchQuery) {
+    if (activeFilters.length === 0 && !searchQuery) {
       setFilteredToilets(toilets);
       return;
     }
 
-    const filtered = toilets.filter((toilet) => {
-      const toiletName = toilet.location?.toLowerCase() || "";
-      const toiletMunicipalityFR = toilet.municipality_fr?.toLowerCase() || "";
-      const toiletMunicipalityNL = toilet.municipality_nl?.toLowerCase() || "";
-      const toiletPostalCode = toilet.postalcode?.toLowerCase() || "";
-      const toiletTerritoryFR = toilet.territory_fr?.toLowerCase() || "";
-      const toiletTerritoryNL = toilet.territory_nl?.toLowerCase() || "";
+    const filteredToilets = toilets.filter(toilet => {
+      let matchesFilter = activeFilters.length === 0;
+      let matchesSearch = true;
 
-      return (
-        toiletName.includes(searchQuery.toLowerCase()) ||
-        toiletMunicipalityFR.includes(searchQuery.toLowerCase()) ||
-        toiletMunicipalityNL.includes(searchQuery.toLowerCase()) ||
-        toiletPostalCode.includes(searchQuery.toLowerCase()) ||
-        toiletTerritoryFR.includes(searchQuery.toLowerCase()) ||
-        toiletTerritoryNL.includes(searchQuery.toLowerCase())
-      );
+      if (activeFilters.includes("Free")) {
+        matchesFilter = matchesFilter || (
+          toilet.pricing_en === "Free" ||
+          toilet.pricing_fr === "Gratuit" ||
+          toilet.pricing_nl === "Gratis"
+        );
+      }
+      if (activeFilters.includes("Paid")) {
+        matchesFilter = matchesFilter || (
+          toilet.pricing_en === "Paid" ||
+          toilet.pricing_fr === "Payant" ||
+          toilet.pricing_nl === "Betalend"
+        );
+      }
+      if (activeFilters.includes("Accessible")) {
+        matchesFilter = matchesFilter || (
+          toilet.pmr_en === "PRM" ||
+          toilet.pmr_nl === "PBM" ||
+          toilet.pmr_fr === "PMR"
+        );
+      }
+
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const toiletName = toilet.location?.toLowerCase() || "";
+        const toiletMunicipalityFR = toilet.municipality_fr?.toLowerCase() || "";
+        const toiletMunicipalityNL = toilet.municipality_nl?.toLowerCase() || "";
+        const toiletPostalCode = toilet.postalcode?.toLowerCase() || "";
+        const toiletTerritoryFR = toilet.territory_fr?.toLowerCase() || "";
+        const toiletTerritoryNL = toilet.territory_nl?.toLowerCase() || "";
+
+        matchesSearch = (
+          toiletName.includes(query) ||
+          toiletMunicipalityFR.includes(query) ||
+          toiletMunicipalityNL.includes(query) ||
+          toiletPostalCode.includes(query) ||
+          toiletTerritoryFR.includes(query) ||
+          toiletTerritoryNL.includes(query)
+        );
+      }
+
+
+      return matchesFilter && matchesSearch;
     });
 
-    console.log("Filtered toilets:", filtered);
-    setFilteredToilets(filtered);
-  }, [searchQuery, toilets]);
+    setFilteredToilets(filteredToilets);
+  }, [toilets, activeFilters, searchQuery]);
+
 
   return (
     <div className="w-full" style={{ height: "50vh" }}>
@@ -86,7 +115,7 @@ const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* ✅ Update map view when search results change */}
+        {/* Update map view when search results change */}
         <MapViewUpdater toilets={filteredToilets} />
 
         {filteredToilets.length > 0 ? (
@@ -94,7 +123,7 @@ const MapComponent = ({ onToiletSelect, activeFilter, searchQuery }) => {
             toilet.geo_point_2d ? (
               <Marker
                 key={index}
-                position={[toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]} // ✅ Use correct coordinates
+                position={[toilet.geo_point_2d.lat, toilet.geo_point_2d.lon]}
                 icon={toiletIcon}
                 eventHandlers={{
                   click: () => {
